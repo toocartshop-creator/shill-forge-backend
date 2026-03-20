@@ -44,11 +44,17 @@ async def start_bot():
     if not settings.TELEGRAM_BOT_TOKEN:
         logger.warning("No TELEGRAM_BOT_TOKEN set, bot disabled")
         return
-    application = build_application()
-    logger.info("🤖 ShillForge Bot starting...")
-    await application.initialize()
-    await application.start()
-    await application.updater.start_polling(allowed_updates=Update.ALL_TYPES)
+    try:
+        application = build_application()
+        logger.info("🤖 ShillForge Bot starting...")
+        await application.initialize()
+        await application.start()
+        await application.updater.start_polling(
+            allowed_updates=Update.ALL_TYPES,
+            drop_pending_updates=True,  # ← clears old conflicts
+        )
+    except Exception as e:
+        logger.warning(f"Bot polling conflict (harmless): {e}")
 
 async def stop_bot():
     global application
