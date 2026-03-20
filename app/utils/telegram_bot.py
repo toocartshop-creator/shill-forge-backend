@@ -4,7 +4,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
-MINI_APP_URL = "https://your-frontend.up.railway.app"  # Replace with real URL
+MINI_APP_URL = "https://shill-forge-bot-guz6.vercel.app/"  # Replace with real URL
 
 application = None
 
