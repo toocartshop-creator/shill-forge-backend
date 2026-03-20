@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings
 from typing import List
 from functools import lru_cache
+import json
 
 class Settings(BaseSettings):
     APP_NAME: str = "ShillForge API"
@@ -24,10 +25,19 @@ class Settings(BaseSettings):
     TAP_ENERGY_MAX: int = 500
     TOKENS_PER_POINTS_RATIO: int = 2
     VIDEO_WATCH_REWARD: int = 500
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = True
+
+        @classmethod
+        def parse_env_var(cls, field_name: str, raw_val: str):
+            if field_name == "ALLOWED_ORIGINS":
+                if raw_val.startswith("["):
+                    return json.loads(raw_val)
+                return [raw_val]
+            return cls.json_loads(raw_val)
 
 @lru_cache()
 def get_settings() -> Settings:
